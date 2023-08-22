@@ -1,11 +1,16 @@
 from DataScraper import DataScraper
 import time
+from Sorting import Sorting
 
 def main():
 
-    dataScraperBinance = DataScraper()
-    data = dataScraperBinance.scrapeAllPages(10,'Binance')
-    # sortedCoins = sorted(data, key=lambda coin: coin.getValue())
+    dataScraper = DataScraper()
+    coinsBinance = dataScraper.scrapeAllPages(1,'Binance')
+    coinsCoinBase = dataScraper.scrapeAllPages(1,'CoinBase')
+    sorting = Sorting(coinsBinance,coinsCoinBase)
+    data = sorting.createListOfMatchingCoins()
+
+
     for coin in data:
         print(coin.getName())
         print(coin.getValue())

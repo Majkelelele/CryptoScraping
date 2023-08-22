@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from CoinCollection import CoinCollection
+from PairOfCoins import PairOfCoins
 from Coin import Coin
 from selenium import webdriver
 import asyncio
