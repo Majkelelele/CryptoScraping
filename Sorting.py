@@ -4,6 +4,7 @@ class Sorting:
         self.site1data = site1Coins
         self.site2data = site2Coins
 
+
     def createListOfMatchingCoins(self):
         coin_pairs = []
 
@@ -12,5 +13,6 @@ class Sorting:
                 if coin1.getName() == coin2.getName():
                     coin_pair = PairOfCoins(coin1,coin2)
                     coin_pairs.append(coin_pair)
+        sortedlist = sorted(coin_pairs, key=lambda pair: pair.percentagePriceDifference)
 
-        return coin_pairs
+        return sortedlist

@@ -39,6 +39,7 @@ class DataScraper:
         for offer in offers:
             coinName = offer.find('div', class_='css-uaf1yb').text
             coinPrice = offer.find('div', class_='css-hwo5f4').text
+            coinPrice =  float(coinPrice.replace("$", "").replace(",", ""))
             newCoin = Coin(coinName, coinPrice)
             dataCoinBinance.append(newCoin)
     def scrapeOnePageCoinBase(self, pageNumber, dataCoin):
@@ -49,6 +50,7 @@ class DataScraper:
             allMainCoinInfos = offer.find_all_next('td', class_ = 'cds-tableCell-t1jg7jzg')
             coinName = allMainCoinInfos[0].findNext('h2', class_="cds-typographyResets-t1xhpuq2 cds-headline-hb7l4gg cds-foreground-f1yzxzgu cds-transition-txjiwsi cds-start-s1muvu8a").text
             coinPrice = allMainCoinInfos[1].findNext('div', class_ = 'cds-flex-f1g67tkn cds-flex-end-f9tvb5a cds-column-ci8mx7v cds-flex-start-f1urtf06').find('span').text
+            coinPrice = float(coinPrice.split()[-1].replace(",", ""))/4.10
             newCoin = Coin(coinName, coinPrice)
             dataCoin.append(newCoin)
 

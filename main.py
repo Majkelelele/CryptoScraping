@@ -1,19 +1,21 @@
 from DataScraper import DataScraper
 import time
 from Sorting import Sorting
+from PairOfCoins import PairOfCoins
 
 def main():
 
     dataScraper = DataScraper()
-    coinsBinance = dataScraper.scrapeAllPages(1,'Binance')
-    coinsCoinBase = dataScraper.scrapeAllPages(1,'CoinBase')
+    coinsBinance = dataScraper.scrapeAllPages(25,'Binance')
+    coinsCoinBase = dataScraper.scrapeAllPages(25,'CoinBase')
     sorting = Sorting(coinsBinance,coinsCoinBase)
     data = sorting.createListOfMatchingCoins()
 
 
+
     for coin in data:
         print(coin.getName())
-        print(coin.getValue())
+        print(str(coin.calculatePricePercentageDifference())+'%')
     print(data.__len__())
 
 
