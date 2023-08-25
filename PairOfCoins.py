@@ -17,3 +17,11 @@ class PairOfCoins:
         value1 = str(self.coin1.getValue())
         value2 = str(self.coin2.getValue())
         return value1 + ',' + value2
+    def printInfo(self, count):
+        print(str(count) + "): ")
+        print("Coin name: " + str(self.coin1.getName()))
+        print("First site name: " + str(self.coin1.getSiteName()))
+        print("First site value: " + str(self.coin1.getValue()))
+        print("Second site name: " + str(self.coin2.getSiteName()))
+        print("Second site value: " + str(self.coin2.getValue()))
+        print("Price percentage difference: " + str(self.calculatePricePercentageDifference()) + '%')

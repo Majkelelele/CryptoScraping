@@ -6,16 +6,15 @@ from PairOfCoins import PairOfCoins
 def main():
 
     dataScraper = DataScraper()
-    coinsBinance = dataScraper.scrapeAllPages(25,'Binance')
-    coinsCoinBase = dataScraper.scrapeAllPages(25,'CoinBase')
+    coinsBinance = dataScraper.scrapeAllPages(1,'Binance')
+    coinsCoinBase = dataScraper.scrapeAllPages(1,'CoinBase')
     sorting = Sorting(coinsBinance,coinsCoinBase)
     data = sorting.createListOfMatchingCoins()
 
 
 
-    for coin in data:
-        print(coin.getName())
-        print(str(coin.calculatePricePercentageDifference())+'%')
+    for i, coin in enumerate(data, start=1):
+        coin.printInfo(i)
     print(data.__len__())
 
 

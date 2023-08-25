@@ -2,8 +2,7 @@ from bs4 import BeautifulSoup
 from PairOfCoins import PairOfCoins
 from Coin import Coin
 from selenium import webdriver
-import asyncio
-from pyppeteer import launch
+
 
 class DataScraper:
     def __init__(self):
@@ -12,8 +11,8 @@ class DataScraper:
         self.CoinBaseLink = 'https://www.coinbase.com/explore'
 
     def createSoup(self,link):
-        driver = webdriver.Chrome()  # Use appropriate WebDriver for your browse
-        # Load the page
+        options = webdriver.ChromeOptions()
+        driver = webdriver.Chrome(options=self.addOptions(options))
         driver.get(link)
         # Wait for content to load (you might need to adjust the waiting time)
         driver.implicitly_wait(5)
@@ -23,7 +22,14 @@ class DataScraper:
         driver.quit()
         return BeautifulSoup(html, 'lxml')
 
-
+    def addOptions(self, options):
+    #     options.add_argument("--headless")
+        options.add_argument("--disable-images")
+        options.add_argument("--disable-javascript")
+        options.add_argument("--disable-extensions")
+        options.add_argument("--disable-plugins")
+        options.add_argument("--disable-internal-flash")
+        return options
 
 
 
@@ -40,7 +46,7 @@ class DataScraper:
             coinName = offer.find('div', class_='css-uaf1yb').text
             coinPrice = offer.find('div', class_='css-hwo5f4').text
             coinPrice =  float(coinPrice.replace("$", "").replace(",", ""))
-            newCoin = Coin(coinName, coinPrice)
+            newCoin = Coin(coinName, coinPrice,"Binance")
             dataCoinBinance.append(newCoin)
     def scrapeOnePageCoinBase(self, pageNumber, dataCoin):
         soupCoinBase = self.createSoup(self.provideLinkForGivenPageCoinBase(pageNumber))
@@ -50,8 +56,8 @@ class DataScraper:
             allMainCoinInfos = offer.find_all_next('td', class_ = 'cds-tableCell-t1jg7jzg')
             coinName = allMainCoinInfos[0].findNext('h2', class_="cds-typographyResets-t1xhpuq2 cds-headline-hb7l4gg cds-foreground-f1yzxzgu cds-transition-txjiwsi cds-start-s1muvu8a").text
             coinPrice = allMainCoinInfos[1].findNext('div', class_ = 'cds-flex-f1g67tkn cds-flex-end-f9tvb5a cds-column-ci8mx7v cds-flex-start-f1urtf06').find('span').text
-            coinPrice = float(coinPrice.split()[-1].replace(",", ""))/4.10
-            newCoin = Coin(coinName, coinPrice)
+            coinPrice = float(coinPrice.split()[-1].replace(",", ""))/4.11
+            newCoin = Coin(coinName, coinPrice,"CoinBase")
             dataCoin.append(newCoin)
 
 
