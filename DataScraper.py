@@ -46,7 +46,8 @@ class DataScraper:
             coinName = offer.find('div', class_='css-uaf1yb').text
             coinPrice = offer.find('div', class_='css-hwo5f4').text
             coinPrice =  float(coinPrice.replace("$", "").replace(",", ""))
-            newCoin = Coin(coinName, coinPrice,"Binance")
+            coinAbbreviation = offer.find('div', class_ = 'css-1x8dg53').text
+            newCoin = Coin(coinName, coinPrice,"Binance",coinAbbreviation)
             dataCoinBinance.append(newCoin)
     def scrapeOnePageCoinBase(self, pageNumber, dataCoin):
         soupCoinBase = self.createSoup(self.provideLinkForGivenPageCoinBase(pageNumber))
@@ -57,7 +58,8 @@ class DataScraper:
             coinName = allMainCoinInfos[0].findNext('h2', class_="cds-typographyResets-t1xhpuq2 cds-headline-hb7l4gg cds-foreground-f1yzxzgu cds-transition-txjiwsi cds-start-s1muvu8a").text
             coinPrice = allMainCoinInfos[1].findNext('div', class_ = 'cds-flex-f1g67tkn cds-flex-end-f9tvb5a cds-column-ci8mx7v cds-flex-start-f1urtf06').find('span').text
             coinPrice = float(coinPrice.split()[-1].replace(",", ""))/self.USDPrice
-            newCoin = Coin(coinName, coinPrice,"CoinBase")
+            coinAbbreviation = allMainCoinInfos[0].findNext('p', class_ = 'cds-typographyResets-t1xhpuq2 cds-label2-l5adacs cds-foregroundMuted-f1vw1sy6 cds-transition-txjiwsi cds-start-s1muvu8a').text
+            newCoin = Coin(coinName, coinPrice,"CoinBase",coinAbbreviation)
             dataCoin.append(newCoin)
 
     def findUSDPrice(self):

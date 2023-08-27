@@ -13,6 +13,8 @@ class MainProgram:
 
         for i, coin in enumerate(data, start=1):
             coin.printInfo(i)
+
+
         print(data.__len__())
         end_time = time.time()
         execution_time = end_time - start_time

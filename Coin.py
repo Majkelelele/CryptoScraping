@@ -1,13 +1,16 @@
 class Coin:
-    def __init__(self, name, value, site):
+    def __init__(self, name, value, site, abr):
         self.name = name
         self.value = value
+        self.abreviation = abr
         self.siteName = site
 
     def getName(self):
         return self.name
     def getValue(self):
         return self.value
+    def getAbreviation(self):
+        return self.abreviation
     def getSiteName(self):
         return self.siteName
     def compare(self, other_coin):
