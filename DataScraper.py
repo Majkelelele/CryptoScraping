@@ -2,7 +2,8 @@ from bs4 import BeautifulSoup
 from PairOfCoins import PairOfCoins
 from Coin import Coin
 from selenium import webdriver
-
+import concurrent.futures
+from selenium.webdriver.common.by import By
 
 class DataScraper:
     def __init__(self):
@@ -24,14 +25,30 @@ class DataScraper:
         return BeautifulSoup(html, 'lxml')
 
     def addOptions(self, options):
-        # options.add_argument("--headless")
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-        options.add_argument('--disable-gpu')
-        options.add_argument('--remote-debugging-port=9222')
+        options.add_argument("--headless")
+        options.add_argument(
+            "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)"
+            " Chrome/93.0.4577.63 Safari/537.36")
+        # options.add_argument('--no-sandbox')
+        # options.add_argument('--disable-dev-shm-usage')
+        # options.add_argument('--disable-gpu')
+        # options.add_argument('--remote-debugging-port=9222')
         return options
 
 
+    def scrapeOnePageBinanceXPath(self, pageNumber, dataCoinBinance):
+        options = webdriver.ChromeOptions()
+        driver = webdriver.Chrome(options=self.addOptions(options))
+        driver.get(self.provideLinkForGivenPageBinance(pageNumber))
+        numberOfCoinsPerPage = 15
+        for i in range(0,numberOfCoinsPerPage):
+            entireCoin = driver.find_element(by=By.XPATH, value="//div[@class='css-vlibs4'][i]")
+            coinName = entireCoin.find_element(by=By.XPATH, value = "//div[@class='css-uaf1yb']").text
+            coinPrice = entireCoin.find_element(by=By.XPATH, value = "//div[@class='css-hwo5f4']").text
+            coinPrice = float(coinPrice.replace("$", "").replace(",", ""))
+            coinAbbreviation = entireCoin.find_element(by=By.XPATH, value = "//div[@class='css-1x8dg53']").text
+            newCoin = Coin(coinName, coinPrice, "Binance", coinAbbreviation)
+            dataCoinBinance.append(newCoin)
 
     def provideLinkForGivenPageBinance(self, pageNumber):
         return self.BinanceLink + f'?p={pageNumber}'
@@ -70,11 +87,26 @@ class DataScraper:
 
 
 
-    def scrapeAllPages(self,maxPage,site):
+    # def scrapeAllPages(self,maxPage,site):
+    #     data = []
+    #     for page in range(1, maxPage + 1):
+    #         if site == 'Binance':
+    #             self.scrapeOnePageBinance(page, data)
+    #         else:
+    #             self.scrapeOnePageCoinBase(page, data)
+    #     return data
+    def scrapeAllPages(self, maxPage, site):
         data = []
-        for page in range(1, maxPage + 1):
+
+        def scrape_page(page_number, data_list):
             if site == 'Binance':
-                self.scrapeOnePageBinance(page, data)
+                self.scrapeOnePageBinance(page_number, data_list)
+                # self.scrapeOnePageBinanceXPath(page_number,data_list)
             else:
-                self.scrapeOnePageCoinBase(page, data)
+                self.scrapeOnePageCoinBase(page_number, data_list)
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+            futures = [executor.submit(scrape_page, page, data) for page in range(1, maxPage + 1)]
+            concurrent.futures.wait(futures)
+
         return data

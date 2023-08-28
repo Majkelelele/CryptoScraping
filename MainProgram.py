@@ -6,8 +6,8 @@ class MainProgram:
     def run(self):
         start_time = time.time()
         dataScraper = DataScraper()
-        coinsBinance = dataScraper.scrapeAllPages(25,'Binance')
-        coinsCoinBase = dataScraper.scrapeAllPages(15, 'CoinBase')
+        coinsBinance = dataScraper.scrapeAllPages(1,'Binance')
+        coinsCoinBase = dataScraper.scrapeAllPages(1, 'CoinBase')
         sorting = Sorting(coinsBinance,coinsCoinBase)
         data = sorting.createListOfMatchingCoins()
 
@@ -15,7 +15,7 @@ class MainProgram:
             coin.printInfo(i)
 
 
-        print(data.__len__())
+        print("Number of coins matched: " + str(data.__len__()))
         end_time = time.time()
         execution_time = end_time - start_time
         print(f"Main execution time: {execution_time:.6f} seconds")
