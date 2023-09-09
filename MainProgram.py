@@ -1,16 +1,25 @@
-from DataScraper import DataScraper
+from BinanceScraper import BinanceScraper
+from CoinBaseScraper import CoinBaseScraper
 import time
 from Sorting import Sorting
-from PairOfCoins import PairOfCoins
+
 class MainProgram:
     def run(self):
         start_time = time.time()
-        dataScraper = DataScraper()
-        coinsBinance = dataScraper.scrapeAllPages(1,'Binance')
-        coinsCoinBase = dataScraper.scrapeAllPages(1, 'CoinBase')
+        coinsBinance = BinanceScraper().scrapeAllPages()
+        coinsCoinBase = CoinBaseScraper().scrapeAllPages()
         sorting = Sorting(coinsBinance,coinsCoinBase)
         data = sorting.createListOfMatchingCoins()
 
+        # for coin in coinsBinance:
+        #     print(coin.getValue())
+        #     print(coin.getName())
+        #     print(coin.getSiteName())
+        #
+        # for coin in coinsCoinBase:
+        #     print(coin.getValue())
+        #     print(coin.getName())
+        #     print(coin.getSiteName())
         for i, coin in enumerate(data, start=1):
             coin.printInfo(i)
 
