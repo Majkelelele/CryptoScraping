@@ -8,18 +8,15 @@ class MainProgram:
         start_time = time.time()
         coinsBinance = BinanceScraper().scrapeAllPages()
         coinsCoinBase = CoinBaseScraper().scrapeAllPages()
+
+
         sorting = Sorting(coinsBinance,coinsCoinBase)
         data = sorting.createListOfMatchingCoins()
 
-        # for coin in coinsBinance:
-        #     print(coin.getValue())
-        #     print(coin.getName())
-        #     print(coin.getSiteName())
-        #
-        # for coin in coinsCoinBase:
-        #     print(coin.getValue())
-        #     print(coin.getName())
-        #     print(coin.getSiteName())
+
+
+
+
         for i, coin in enumerate(data, start=1):
             coin.printInfo(i)
 
