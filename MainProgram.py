@@ -8,6 +8,8 @@ class MainProgram:
         start_time = time.time()
         coinsBinance = BinanceScraper().scrapeAllPages()
         coinsCoinBase = CoinBaseScraper().scrapeAllPages()
+        # for i, coin in enumerate(coinsBinance, start=1):
+        #     coin.printInfo(i)
 
 
         sorting = Sorting(coinsBinance,coinsCoinBase)

@@ -3,23 +3,35 @@ from Coin import Coin
 import concurrent.futures
 from bs4 import BeautifulSoup
 from selenium import webdriver
+import time
+from selenium.webdriver.common.by import By
 class BinanceScraper(DataScraper):
     def __init__(self):
-        super().__init__(25)
+        super().__init__(2)
         self.link = 'https://www.binance.com/en/markets/overview'
 
     def createSoup(self,link):
         options = webdriver.ChromeOptions()
         driver = webdriver.Chrome(options=self.addOptions(options))
         driver.get(link)
-        # Wait for content to load (you might need to adjust the waiting time)
-        driver.implicitly_wait(5)
+        time.sleep(5)
+        driver = self.pickCurrency(driver)
 
-        # Get the page source after JavaScript rendering
         html = driver.page_source
-        # Close the driver
         driver.quit()
         return BeautifulSoup(html, 'lxml')
+    def pickCurrency(self, driver):
+        cookiesButton = driver.find_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
+        if cookiesButton is not None:
+            cookiesButton.click()
+        time.sleep(2)
+        # # clicking currency menu
+        # driver.find_element(By.XPATH, '//*[@id="__APP_HEADER"]/div/header/div[2]/div[3]').click()
+        # time.sleep(2)
+        # # USD option
+        # driver.find_element(By.XPATH, '//*[@id="__APP_HEADER"]/div/header/div[2]/div[3]/div[2]/div/div/div[2]/div/div[3]/div[50]')
+        # time.sleep(5)
+        return driver
     def provideLinkForGivenPage(self, pageNumber):
         return self.link + f'?p={pageNumber}'
     def scrapeOnePage(self, pageNumber, dataCoinBinance):
@@ -28,20 +40,9 @@ class BinanceScraper(DataScraper):
         offers = soupBinance.findAll('div', class_='css-vlibs4')
 
         for offer in offers:
-            coinName = offer.find('div', class_='css-uaf1yb').text
+            coinName = offer.find_next('div', class_ = 'css-dybhdz').text
             coinPrice = offer.find('div', class_='css-hwo5f4').text
-            coinPrice =  float(coinPrice.replace("€", "").replace(",", ""))
-            coinAbbreviation = offer.find('div', class_ = 'css-1x8dg53').text
+            coinPrice =  float(coinPrice.replace("$", "").replace(",", ""))
+            coinAbbreviation = offer.find_next('div', class_ = 'css-12il21h').text
             newCoin = Coin(coinName, coinPrice,"Binance",coinAbbreviation)
             dataCoinBinance.append(newCoin)
-
-
-
-    # def scrapeGivenPages(self, minPage, maxPage):
-    #     data = []
-    #
-    #     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-    #         futures = [executor.submit(self.scrapeOnePage, page, data) for page in range(minPage, maxPage + 1)]
-    #         concurrent.futures.wait(futures)
-    #
-    #     return data

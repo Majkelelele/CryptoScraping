@@ -26,3 +26,8 @@ class Coin:
             if coin.getName() == "Maker":
                 Coin = coin
         return Coin
+    def printInfo(self, count):
+        print(str(count) + "): ")
+        print("Coin name: " + str(self.getName()))
+        print("site name: " + str(self.getSiteName()))
+        print("Coin's value: " + str(self.getValue()))
