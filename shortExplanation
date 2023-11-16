@@ -1,0 +1,4 @@
+Program scrapes all coins from two most popular cryptocoins exchanges: Binance and CoinBase. Scrapes all coins info: name, price, abbreviation from both sites
+than matches the same coins and sorts them by increasing arbitrage opportunity. Finally prints all coins sorted with price percentage difference.
+You can adjust currency in 'pickCurrency' function, adjust number of coins scraped in DataScrapers' constructor.
+Making the process of scraping concurrent in progress!!(will inc scraping speed). 
