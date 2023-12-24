@@ -10,6 +10,9 @@ class MainProgram:
         coinsCoinBase = CoinBaseScraper().scrapeAllPages()
         # for i, coin in enumerate(coinsBinance, start=1):
         #     coin.printInfo(i)
+        # for i, coin in enumerate(coinsCoinBase, start=1):
+        #     coin.printInfo(i)
+
 
 
         sorting = Sorting(coinsBinance,coinsCoinBase)

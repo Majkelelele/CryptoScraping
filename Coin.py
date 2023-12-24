@@ -1,8 +1,7 @@
 class Coin:
-    def __init__(self, name, value, site, abr):
+    def __init__(self, name, value, site):
         self.name = name
         self.value = value
-        self.abreviation = abr
         self.siteName = site
 
     def getName(self):

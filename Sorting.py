@@ -20,6 +20,5 @@ class Sorting:
 
     def coinRequirements(self, coin1, coin2):
         return coin1.getValue() > 0 and coin2.getValue() > 0 and \
-            coin1.getName() == coin2.getName() and\
-            coin1.getAbreviation() == coin2.getAbreviation()
+            coin1.getName() == coin2.getName()
 

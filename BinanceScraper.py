@@ -7,29 +7,20 @@ import time
 from selenium.webdriver.common.by import By
 class BinanceScraper(DataScraper):
     def __init__(self):
-        super().__init__(2)
+        super().__init__(10)
         self.link = 'https://www.binance.com/en/markets/overview'
 
-    def createSoup(self,link):
-        options = webdriver.ChromeOptions()
-        driver = webdriver.Chrome(options=self.addOptions(options))
-        driver.get(link)
-        time.sleep(5)
-        driver = self.pickCurrency(driver)
 
-        html = driver.page_source
-        driver.quit()
-        return BeautifulSoup(html, 'lxml')
     def pickCurrency(self, driver):
-        cookiesButton = driver.find_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
-        if cookiesButton is not None:
+        if driver.find_elements(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]'):
+            cookiesButton = driver.find_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
             cookiesButton.click()
-        time.sleep(2)
-        # # clicking currency menu
+            time.sleep(2)
+        # clicking currency menu
         # driver.find_element(By.XPATH, '//*[@id="__APP_HEADER"]/div/header/div[2]/div[3]').click()
         # time.sleep(2)
         # # USD option
-        # driver.find_element(By.XPATH, '//*[@id="__APP_HEADER"]/div/header/div[2]/div[3]/div[2]/div/div/div[2]/div/div[3]/div[50]')
+        # driver.find_element(By.XPATH, '//*[@id="__APP_HEADER"]/div/header/div[2]/div[3]/div[2]/div/div/div[2]/div/div[3]/div[4]')
         # time.sleep(5)
         return driver
     def provideLinkForGivenPage(self, pageNumber):
@@ -40,9 +31,9 @@ class BinanceScraper(DataScraper):
         offers = soupBinance.findAll('div', class_='css-vlibs4')
 
         for offer in offers:
-            coinName = offer.find_next('div', class_ = 'css-dybhdz').text
-            coinPrice = offer.find('div', class_='css-hwo5f4').text
+            coinName = offer.find('div', class_ = 'body3 line-clamp-1 truncate text-t-third css-vurnku').text
+            coinPrice = offer.find('div', class_='body2 items-center css-18yakpx').text
             coinPrice =  float(coinPrice.replace("$", "").replace(",", ""))
-            coinAbbreviation = offer.find_next('div', class_ = 'css-12il21h').text
-            newCoin = Coin(coinName, coinPrice,"Binance",coinAbbreviation)
+            # coinAbbreviation = offer.find('div', class_ = 'subtitle3 text-t-primary css-vurnku')
+            newCoin = Coin(coinName, coinPrice,"Binance")
             dataCoinBinance.append(newCoin)
